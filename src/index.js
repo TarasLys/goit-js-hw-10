@@ -8,42 +8,57 @@ const loader = document.querySelector('.loader');
 const error = document.querySelector('.error');
 const divPicture = document.querySelector(".div-picture");
 
-loader.style.display = 'none';
+function toggleLoader(display) {
+  loader.style.display = display;
+}
+
+function toggleCanInfo(display) { 
+  catInfo.style.display = display;
+}
+
+toggleLoader('none');
 error.style.display = 'none';
 
-loader.style.display = 'block';
+toggleLoader('block');
 
 fetchBreeds().then(breeds => {
-  loader.style.display = 'none';
+ 
+  toggleLoader('none');
 
-    breeds.forEach(breed => {
-
-      const option = document.createElement('option');
-      option.value = breed.id;
-      option.textContent = breed.name;
-      breedSelect.appendChild(option);
-  });
+  const positionBreeds = breeds.map(breed => {
+    const option = document.createElement('option');
+    option.value = breed.id;
+    option.textContent = breed.name;
+    return option;
+    
+  })
+  breedSelect.append(...positionBreeds);
 
   new SlimSelect({
-  select: '.breed-select',
-})
+    select: '.breed-select',
+  })
 
-}).catch(() => {
-  loader.style.display = 'none';
+})
+  .catch(() => {
   
-  Notiflix.Notify.warning('❌ Oops! Something went wrong! Try reloading the page!', {
-  // position: 'center-top' , 
-});
-});
+    Notiflix.Notify.warning('❌ Oops! Something went wrong! Try reloading the page!', {
+      // position: 'center-top' , 
+    });
+  })
+  .finally(() => {
+    toggleLoader('none');
+  });
 
 
 breedSelect.addEventListener('change', (event) => {
-      catInfo.style.display = 'none';
-      loader.style.display = 'block';
+  toggleCanInfo('none');
+  toggleLoader('block');
+  
   fetchCatByBreed(event.target.value)
     .then(cat => {
-      loader.style.display = 'none';
-      catInfo.style.display = 'block';
+      
+      toggleLoader('none');
+      toggleCanInfo('block');
       
     divPicture.innerHTML = `
     <img class="picture" src="${cat.url}" alt="${cat.breeds[0].name}">`
@@ -54,41 +69,13 @@ breedSelect.addEventListener('change', (event) => {
   })
     
     .catch(() => {
-    loader.style.display = 'none';
-      
+     
       Notiflix.Notify.warning('❌ Oops! Something went wrong! Try reloading the page!', {
   //  position: 'center-top' , 
 });
-  });
+    })
+  .finally(() => { 
+    toggleLoader('none');
+  })
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

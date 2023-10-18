@@ -4,7 +4,7 @@ body {
 }
 
 .common {
-    display: flex;
+    display: column;
     margin-top: 30px;
 }
 
@@ -16,8 +16,8 @@ width: 400px;
 .cat-info {
     /* display: flex; */
     flex-direction: column;
-    width: 600px;
-    margin-left: 30px;
+    width: 400px;
+    margin-left: 5px;
     margin-top: 25px;
 }
 
